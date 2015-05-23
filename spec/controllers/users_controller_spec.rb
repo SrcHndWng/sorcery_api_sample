@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe UsersController, type: :controller do
+RSpec.describe Api::V1::UsersController, type: :controller do
   let(:valid_attributes) {
     {email: 'duke@ggg.com', name: 'duketogo', password: 'golgo13', password_confirmation: 'golgo13'}
   }

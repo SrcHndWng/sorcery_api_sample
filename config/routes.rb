@@ -8,6 +8,9 @@ Rails.application.routes.draw do
       resources :user_sessions
 
       post 'logout' => 'user_sessions#destroy', :as => :logout
+
+      get 'sample/public'
+      get 'sample/restrict'
     end
   end
 

@@ -7,6 +7,7 @@ RSpec.describe Api::V1::UserSessionsController, type: :controller do
   let(:not_exist_login_user) {
     {email: 'duke@ggg.com', name: 'duketogo', password: 'x', password_confirmation: 'x'}
   }
+  let(:not_exist_access_token) { 'xxxxx' }
 
   before(:all) do
     @user_1 = FactoryGirl.create(:user, {email: 'user1@test.com', name: 'user1', password: 'password', password_confirmation: 'password'})
@@ -63,9 +64,24 @@ RSpec.describe Api::V1::UserSessionsController, type: :controller do
   end
 
   describe "POST #destroy" do
-    it "returns http success" do
+    it "active user" do
+      post :create, {format: :json, user: valid_login_user}
+      expect(response.status).to eq(200)
+      json = JSON.parse(response.body)
+      user = json['user']
+      access_token = json['access_token']
+      expect(ApiKey.find_by_user_id(user['id']).active).to eq(true)
+
+      request.env['HTTP_ACCESS_TOKEN'] = access_token
       post :destroy
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(200)
+      expect(ApiKey.find_by_user_id(user['id']).active).to eq(false)
+    end
+
+    it "not exist access token" do
+      request.env['HTTP_ACCESS_TOKEN'] = not_exist_access_token
+      post :destroy, {format: :json}
+      expect(response).to have_http_status(404)
     end
   end
 

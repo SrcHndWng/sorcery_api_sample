@@ -3,7 +3,7 @@ module Api
     class UserSessionsController < ApplicationController
       def create
         if @user = login(login_user[:email], login_user[:password])
-          api_key = ApiKey.activate(@user.id)
+          api_key = @user.activate
           @access_token = api_key.access_token
         else
           respond_to do |format|
@@ -13,6 +13,16 @@ module Api
       end
 
       def destroy
+        access_token = request.headers[:HTTP_ACCESS_TOKEN]
+        api_key = ApiKey.find_by_access_token(access_token)
+        if api_key
+          user = User.find(api_key.user_id)
+          user.inactivate
+        else
+          respond_to do |format|
+            format.json { render nothing: true, status: :not_found }
+          end
+        end
       end
 
       private

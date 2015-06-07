@@ -14,18 +14,6 @@ class ApiKey < ActiveRecord::Base
     self.expires_at = DateTime.now + 1
   end
 
-  def self.activate(user_id)
-    api_key = self.find_by_user_id(user_id)
-    if !api_key
-      api_key = self.create(user_id: user_id)
-    else
-      api_key.send(:set_active) if !api_key.active
-      api_key.send(:set_expiration) if !api_key.before_expired?
-      api_key.save
-    end
-    return api_key
-  end
-
   private
 
     def generate_access_token

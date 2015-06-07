@@ -1,28 +1,11 @@
-== README
+== About
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a Sample Authentication API Appliction with Ruby on Rails, sorcery.
 
-Things you may want to cover:
+== Environments
 
-* Ruby version
+* Ruby 2.1.2
 
-* System dependencies
+* Rails 4.2.1
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+* sorcery 0.9.1

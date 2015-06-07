@@ -13,6 +13,10 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     @user_2 = FactoryGirl.create(:user, {email: 'user2@test.com', name: 'user2', password: 'password', password_confirmation: 'password'})
     @user_3 = FactoryGirl.create(:user, {email: 'user3@test.com', name: 'user3', password: 'password', password_confirmation: 'password'})
 
+    @user_1_api_key = FactoryGirl.create(:api_key, { user_id: @user_1.id })
+    @user_2_api_key = FactoryGirl.create(:api_key, { user_id: @user_2.id })
+    @user_3_api_key = FactoryGirl.create(:api_key, { user_id: @user_3.id })
+    
     @min_id = User.all[0]['id']
     @user_count = User.count
   end
@@ -21,11 +25,16 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     @user_1.delete
     @user_2.delete
     @user_3.delete
+
+    @user_1_api_key.delete
+    @user_2_api_key.delete
+    @user_3_api_key.delete
   end
 
   describe "GET #index" do
     context "get users" do
       it "returns users" do
+        request.env['HTTP_ACCESS_TOKEN'] = @user_1_api_key.access_token
         get :index, { format: :json }
         expect(response.status).to eq(200)
 
@@ -41,6 +50,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "GET #show" do
     context "get user" do
       it "returns user" do
+        request.env['HTTP_ACCESS_TOKEN'] = @user_1_api_key.access_token
         get :show, { id: @min_id, format: :json }
         expect(response.status).to eq(200)
 
@@ -53,6 +63,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
     context "not exists user" do
       it "returns nothing" do
+        request.env['HTTP_ACCESS_TOKEN'] = @user_1_api_key.access_token
         not_exist_id = 0
         get :show, { id: not_exist_id, format: :json }
         expect(response.status).to eq(404)
@@ -86,6 +97,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       it "update user" do
+        request.env['HTTP_ACCESS_TOKEN'] = @user_1_api_key.access_token
         put :update, { id: @min_id, format: :json, user: valid_attributes }
         expect(response.status).to eq(200)
 
@@ -98,6 +110,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
     context "with invalid params" do
       it "returns error" do
+        request.env['HTTP_ACCESS_TOKEN'] = @user_1_api_key.access_token
         put :update, { id: @min_id, format: :json, user: invalid_attributes }
         expect(response.status).to eq(422)
 
@@ -110,6 +123,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "DELETE #delete" do
     context "delete" do
       it "delete user" do
+        request.env['HTTP_ACCESS_TOKEN'] = @user_1_api_key.access_token
         delete :destroy, { id: @min_id, format: :json }
         expect(response.status).to eq(204)
 

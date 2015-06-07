@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
-  root :to => 'users#index'
-  resources :users
+  # root :to => 'users#index'
+  # resources :users
 
   namespace :api do
     namespace :v1 do
       resources :users
-      resources :user_sessions
-
-      post 'logout' => 'user_sessions#destroy', :as => :logout
+      resource :user_sessions, only: [:create, :destroy]
 
       get 'sample/public'
       get 'sample/restrict'

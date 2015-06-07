@@ -73,7 +73,7 @@ RSpec.describe Api::V1::UserSessionsController, type: :controller do
       expect(ApiKey.find_by_user_id(user['id']).active).to eq(true)
 
       request.env['HTTP_ACCESS_TOKEN'] = access_token
-      post :destroy
+      post :destroy, {format: :json}
       expect(response).to have_http_status(200)
       expect(ApiKey.find_by_user_id(user['id']).active).to eq(false)
     end
@@ -81,7 +81,7 @@ RSpec.describe Api::V1::UserSessionsController, type: :controller do
     it "not exist access token" do
       request.env['HTTP_ACCESS_TOKEN'] = not_exist_access_token
       post :destroy, {format: :json}
-      expect(response).to have_http_status(404)
+      expect(response).to have_http_status(401)
     end
   end
 

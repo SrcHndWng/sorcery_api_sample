@@ -23,7 +23,7 @@ module Api
         respond_to do |format|
           @user = User.new(user_params)
 
-          if @user.save
+          if @user.save_relation(department_params)
             format.json { render nothing: true, status: :created }
           else
             format.json { render nothing: true, status: :bad_request }
@@ -34,8 +34,8 @@ module Api
       # PATCH/PUT /users/1.json
       def update
         respond_to do |format|
-          if @user.update(user_params)
-            format.json { render json: @user }
+          if @user.update_relation(user_params, department_params)
+            format.json { render :show }
           else
             format.json { render json: @user.errors, status: :unprocessable_entity }
           end
@@ -59,6 +59,10 @@ module Api
         # Never trust parameters from the scary internet, only allow the white list through.
         def user_params
           params.require(:user).permit(:email, :name, :password, :password_confirmation)
+        end
+
+        def department_params
+          params.require(:department).permit(:department_id)
         end
     end
   end

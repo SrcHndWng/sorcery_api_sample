@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
       get 'sample/public'
       get 'sample/restrict'
+      get 'sample/admin'
     end
   end
 

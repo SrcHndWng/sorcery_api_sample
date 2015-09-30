@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users
       resource :user_sessions, only: [:create, :destroy]
+      resources :password_resets
 
       get 'sample/public'
       get 'sample/restrict'
